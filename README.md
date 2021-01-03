@@ -9,9 +9,9 @@ The ‘Complete and Await Response’ command can be run directly with default o
 ## Installation
 This plug-in requires OmniFocus for macOS version 3.11.1 or later, or OmniFocus for iOS version 3.11.2 or later.
 ### 1. Download the plug-in.
-Download the plug-in file (`autocar.omnifocusjs.zip`) of the latest release and unzip the file. [Go to releases](https://github.com/multigreg/test-complete-and-await/releases)
+Download the plug-in file (`autocar.omnifocusjs.zip`) of the latest release and unzip the file. [Go to releases](https://github.com/multigreg/autocar/releases)
 
-(Alternatively, download the plug-in’s files using the green ‘Code’ button, unzip, and rename the folder with the extension `.omnifocusjs`.)
+(Alternatively, download the repository files using the green ‘Code’ button, unzip, and rename the ‘autocar’ folder with the extension `.omnifocusjs`.)
 ### 2. (Optional) Specify a ‘waiting’ tag in the settings.
 By default, the plug-in looks for a tag called ‘waiting’ (or a close match) and adds it to the new actions. This tag will be created if it isn’t found.
 
@@ -48,4 +48,4 @@ Prior implementations of the ‘complete and await a reply’ automation:
 - [Complete and Await Reply](https://omni-automation.com/omnifocus/plug-in-complete-await.html) with Omni Automation, by Rosemary Orchard.
 
 
-Thanks to Rob Trew for his valuable tips.
+Thanks to [Rob Trew](https://github.com/robtrew) for his valuable tips.
