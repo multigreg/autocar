@@ -6,6 +6,8 @@ The ‘Complete and Await Response’ command marks the currently selected actio
 Features include applying a filtered set of the tags of the completed actions to the new actions, and rules for automatically naming the new actions.
 
 The ‘Complete and Await Response’ command can be run directly with default options, or with the ‘Option’ key pressed to display an Options dialog for the new actions.
+
+[More details and examples](https://github.com/multigreg/autocar/wiki)
 ## Installation
 This plug-in requires OmniFocus for macOS version 3.11.1 or later, or OmniFocus for iOS version 3.11.2 or later.
 ### 1. Download the plug-in.
@@ -40,7 +42,7 @@ To modify the settings on macOS:
 - right-click (or Control-click) on the plug-in file (`autocar.omnifocusjs`) and select ‘Show Package Contents’.
 - In the `Resources` folder, open the file `settings.js` in a text editor.
 
-Each setting is explained in the file. More details and examples are on the wiki:
+Each setting is explained in the file. More details and examples are on the wiki: [Settings](https://github.com/multigreg/autocar/wiki/Settings)
 ## Credits
 Prior implementations of the ‘complete and await a reply’ automation:
 - The popular [Complete and Await Reply](http://curtclifton.net/complete) in AppleScript by Curt Clifton.
