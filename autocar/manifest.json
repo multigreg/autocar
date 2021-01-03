@@ -1,0 +1,13 @@
+{
+    "identifier": "com.multigreg.omnifocus.autocar",
+    "version": "0.8",
+    "description": "Adds a ‘Complete and Await Response’ command for actions, with automatic naming & tagging which can be customised in the plug-in’s settings. Run with the 'Option' key to display an Options dialog for the new actions.",
+    "author": "multigreg.com",
+    "defaultLocale": "en",
+    "actions": [
+        {"identifier": "autocar", "image": "autocar.png"}
+    ],
+    "libraries": [
+        {"identifier": "autocarLib"}
+    ]
+}
