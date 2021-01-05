@@ -39,7 +39,7 @@
         } catch(e) {
             switch(e) {
                 case 100:
-                    msg = `The ${this.plugIn.displayName} plug-in requires:\n\nOmniFocus for macOS version ${pLib.minAppVersions.mac.release} or later,\nor OmniFocus for iOS version ${pLib.minAppVersions.ios.release} or later.`
+                    const msg = `The ${this.plugIn.displayName} plug-in requires:\n\nOmniFocus for macOS version ${pLib.minAppVersions.mac.release} or later,\nor OmniFocus for iOS version ${pLib.minAppVersions.ios.release} or later.`
                     pLib.errorAlert('Incompatible version of OmniFocus', msg)
                     break
                 default:
