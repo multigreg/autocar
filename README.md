@@ -13,7 +13,7 @@ This plug-in requires OmniFocus for macOS version 3.11.1 or later, or OmniFocus 
 ### 1. Download the plug-in.
 Download the plug-in file (`autocar.omnifocusjs.zip`) of the latest release and unzip the file. [Go to releases](https://github.com/multigreg/autocar/releases)
 
-(Alternatively, download the repository files using the green ‘Code’ button, unzip, and rename the ‘autocar’ folder with the extension `.omnifocusjs`.)
+(Alternatively, download the repository files using the green ‘Code’ button and unzip ; the plug-in file is `autocar.omnifocusjs`.)
 ### 2. (Optional) Specify a ‘waiting’ tag in the settings.
 By default, the plug-in looks for a tag called ‘waiting’ (or a close match) and adds it to the new actions. This tag will be created if it isn’t found.
 
