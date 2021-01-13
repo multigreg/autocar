@@ -4,13 +4,20 @@
     
     piLib.process = (tasks, pluginSettingsInput) => {
         try {
-            if(!pluginSettingsInput.waitTagName) {
-                delete pluginSettingsInput.waitTagName
-            }
-            const pluginSettings = { ...defaults(), ...pluginSettingsInput}
             let options, formInitialValues
-
+            
             (function prepare() {
+                if(!pluginSettingsInput.waitTagName) {
+                    // use default, since there must be a waiting tag to fall back on if waitTagID is invalid
+                    delete pluginSettingsInput.waitTagName
+                }
+                if(pluginSettingsInput.noteLink === true) {
+                    // in plug-in settings, true means use the default note link
+                    delete pluginSettingsInput.noteLink
+                }
+
+                const pluginSettings = { ...defaults(), ...pluginSettingsInput}
+
                 const reappliedTagsFilter = () => {
                     if(anArray(pluginSettings.reappliedTagsFilter).length) {
                         const rtags = anArray(pluginSettings.reappliedTagsFilter).map(idOrName => getTag(idOrName)).filter(i => i)
@@ -38,25 +45,27 @@
                     return rules
                 }
 
-                options = {
+                const processedPluginSettings = {
                     applyWaitTag: Boolean(pluginSettings.applyWaitTag),
                     placeWaitTagFirst: Boolean(pluginSettings.placeWaitTagFirst),
                     reapplyTags: Boolean(pluginSettings.reapplyTags),
                     reappliedTagsFilter: reappliedTagsFilter(),  // array of Tag, or null
                     taskNameRules: taskNameRules(pluginSettings.taskNameRules),
-                    noteLink: ((l) => (typeof l === 'boolean' ) ? Boolean(l) : String(l))(pluginSettings.noteLink),
+                    noteLink: ((l) => (typeof l === 'boolean' ) ? l : String(l))(pluginSettings.noteLink),
+                    transferNote: Boolean(pluginSettings.transferNote),
                     deferDate: pluginSettings.setDeferDate ? futureDate(pluginSettings.deferDaysLater, settings.objectForKey('DefaultStartTime')) : null,
                     dueDate: pluginSettings.setDueDate ? futureDate(pluginSettings.dueDaysLater, settings.objectForKey('DefaultDueTime')) : null,
                     waitTaskPosition: String(pluginSettings.waitTaskPosition)
                 }
+                options = { ...pluginSettings, ...processedPluginSettings}
                 formInitialValues = {
-                    deferDate: pluginSettings.setDeferDateInDialog ? futureDate(pluginSettings.deferDaysLater, settings.objectForKey('DefaultStartTime')) : null,
-                    dueDate: pluginSettings.setDueDateInDialog ? futureDate(pluginSettings.dueDaysLater, settings.objectForKey('DefaultDueTime')) : null, 
+                    deferDate: options.setDeferDateInDialog ? futureDate(options.deferDaysLater, settings.objectForKey('DefaultStartTime')) : null,
+                    dueDate: options.setDueDateInDialog ? futureDate(options.dueDaysLater, settings.objectForKey('DefaultDueTime')) : null, 
                 }
             })()
             
-            const isKeyDown = app[pluginSettings.modifierKey.toLowerCase() + 'KeyDown'] 
-            if((d => isKeyDown ? !d : d)(Device.current.mac ? pluginSettings.macShowDialog : pluginSettings.iOSShowDialog)) {
+            const isKeyDown = app[options.modifierKey.toLowerCase() + 'KeyDown'] 
+            if((d => isKeyDown ? !d : d)(Device.current.mac ? options.macShowDialog : options.iOSShowDialog)) {
                 showForm(tasks, { ...options, ...formInitialValues })
             } else {
                 modifyTasks(tasks, getOrCreateWaitTag(), options)
@@ -76,7 +85,7 @@
                     const project = task.containingProject || inbox
 
                     switch(options.waitTaskPosition) {
-                    case 'outsideSequences':
+                    case 'outsideSequences': {
                         const hsq = highestSequentialParent(task)
                         if(hsq) {
                             if(hsq.project) {  // is root task of project
@@ -87,11 +96,37 @@
                         } else {
                             return task.after
                         }
+                    }
                     case 'projectEnd':
                         return project.ending
                     default:
                         return task.after
                     }
+                }
+                const noteLink = (task) => {
+                    try {
+                        // link and timestamp() link can be referenced in options.noteLink (by default or defined in settings.js)
+                        const link = `${app.name.toLowerCase()}:///task/${task.id.primaryKey}`
+                        const timestamp = (date, time) => {
+                            const styles = ['Short', 'Medium', 'Long', 'Full']
+                            let dateStyle, timeStyle, custom
+                            if(date) {
+                                if(styles.includes(date)) {
+                                    dateStyle = Formatter.Date.Style[date]
+                                } else {
+                                    custom = date
+                                }
+                                if(styles.includes(time)) {
+                                    timeStyle = Formatter.Date.Style[time]
+                                }
+                            } else {
+                                custom = 'E d MMM, HH:mm'
+                            }
+                            const df = custom ? Formatter.Date.withFormat(custom) : Formatter.Date.withStyle(dateStyle, timeStyle)
+                            return df.stringFromDate(new Date())
+                        }                        
+                        return eval('`' + options.noteLink + '`')
+                    } catch {}
                 }
 
                 try {
@@ -114,9 +149,16 @@
                         
                         if(options.deferDate) w.deferDate = options.deferDate
                         if(options.dueDate) w.dueDate = options.dueDate
+                        
                         if(options.noteLink) {
-                            const prefix = (options.noteLink === true) ? '' : options.noteLink
-                            w.note = `${prefix} ${app.name.toLowerCase()}:///task/${t.id.primaryKey}`
+                            const note = noteLink(t)
+                            if(note) {
+                                w.note = note
+                            }
+                        }
+                        if(options.transferNote && t.note) {
+                            const spacing = w.note ? '\n\n' : ''
+                            w.appendStringToNote(spacing + t.note)
                         }
 
                         t.markComplete()
@@ -222,6 +264,14 @@
                         return new Form.Field.Checkbox('reapplyTags', label(), options.reapplyTags)
                     }
                 })()
+
+                const transferNotesField = (() => {
+                    if(tasks.some(t => t.note)) {
+                        const plural = tasks.length > 1 ? 's' : ''
+                        const label = `Transfer the note${plural} of the completed action${plural}`
+                        return new Form.Field.Checkbox('transferNote', label, options.transferNote)
+                    }
+                })()
                 
                 const waitTaskPositionField = (() => {
                     if(options.waitTaskPosition != 'projectEnd' && tasks.some(t => highestSequentialParent(t))) {
@@ -243,6 +293,7 @@
                     waitTag && f.addField(new Form.Field.Checkbox('applyWaitTag', 'Add tag: ' + waitTag.name, options.applyWaitTag))
                     f.addField(new Form.Field.Date('deferDate', 'Defer date', options.deferDate))
                     f.addField(new Form.Field.Date('dueDate', 'Due date', options.dueDate))
+                    transferNotesField && f.addField(transferNotesField)
                     waitTaskPositionField && f.addField(waitTaskPositionField)
                     return f
                 })()
@@ -293,7 +344,7 @@
             }
             
             function getOrCreateWaitTag() {
-                return getOrCreateTag(pluginSettings.waitTagID, pluginSettings.waitTagName, true)
+                return getOrCreateTag(options.waitTagID, options.waitTagName, true)
             }
 
             function addDescendents(arrayTags) {
@@ -326,7 +377,8 @@
                     reapplyTags: false,
                     reappliedTagsFilter: [],
                     taskNameRules: ['Wait for response: '],
-                    noteLink: 'Created on completion of:',
+                    noteLink: '${timestamp()} — completed: ${link}',
+                    transferNote: true,
                     waitTaskPosition: 'normal',  // 'normal', 'outsideSequences', or 'projectEnd'
                     setDeferDate: false,
                     setDeferDateInDialog: true,

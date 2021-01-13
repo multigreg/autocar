@@ -24,7 +24,7 @@
             function objFromSettingsInput() {
                 const s = [
                     'waitTagID', 'waitTagName', 'applyWaitTag', 'placeWaitTagFirst',
-                    'reapplyTags', 'reappliedTagsFilter', 'taskNameRules', 'noteLink', 'waitTaskPosition',
+                    'reapplyTags', 'reappliedTagsFilter', 'taskNameRules', 'noteLink', 'transferNote', 'waitTaskPosition',
                     'setDeferDate', 'setDeferDateInDialog', 'deferDaysLater', 'setDueDate', 'setDueDateInDialog', 'dueDaysLater',
                     'macShowDialog', 'iOSShowDialog', 'modifierKey'
                 ]
@@ -38,10 +38,11 @@
             }
         } catch(e) {
             switch(e) {
-                case 100:
+                case 100: {
                     const msg = `The ${this.plugIn.displayName} plug-in requires:\n\nOmniFocus for macOS version ${pLib.minAppVersions.mac.release} or later,\nor OmniFocus for iOS version ${pLib.minAppVersions.ios.release} or later.`
                     pLib.errorAlert('Incompatible version of OmniFocus', msg)
                     break
+                }
                 default:
                     console.log('calling error alert: ' + e)
                     pLib.errorAlert(e, 'Error initializing the plug-in.')

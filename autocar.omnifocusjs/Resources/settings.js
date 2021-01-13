@@ -12,10 +12,10 @@ const applyWaitTag = true
 const placeWaitTagFirst = false
 
 // Apply the tags of each completed action to its corresponding 'waiting for' action (true/false).
-const reapplyTags = false
+const reapplyTags = true
 // Only reapply the following tags and their descendants.
 // Enter [] to reapply all tags, or a list of tag IDs or names, example: ['People', 'Important', 'g8LToQ3AQpK'].
-const reappliedTagsFilter = []
+const reappliedTagsFilter = ['People']
 
 // List (array) of rules to create the name of each 'waiting for' action based on its corresponding completed action,
 // in decreasing order of priority. Each rule can be a prefix text or an array with 2 items:
@@ -24,12 +24,19 @@ const taskNameRules = [
     [ /.*?(?:ask|call|email|message)\s(?:to\s)?(.+?)(?:\s+(?:to|for|about|regarding|re)\W+|—|\W{2,})(.+)/i , 'Waiting for reply from $1: $2' ],
     [ /.*?(?:ask|call|email|message)\W+(.+)/i , 'Waiting for reply: $1'],
     [ /.*?(?:order)(?:\s(?:of|for))?\W+(.+)/i , 'Waiting for delivery: $1'],
+    [ /(Waiting for.*?: .+)/i , '$1'],
     'Waiting for response: ',
     'Waiting for: '
 ]
 
-// In the note of the 'waiting for' action, add a link to the completed action (true, false, or the text to add before the link).
-const noteLink = 'Created on completion of:'
+// In the note of the 'waiting for' action, add a link to the completed action
+// and a timestamp (true, false, or a custom string).
+// For details on the custom string format, see the Autocar wiki. Examples:
+// const noteLink = '${timestamp("Full", "Short")} — completed: ${link}'
+// const noteLink = '${timestamp("E d MMM, HH:mm")} — completed: ${link}'
+const noteLink = true
+// transfer the note of the completed action to the 'waiting for' action (plain text only)
+const transferNote = true
 
 // Set a defer date for the 'waiting for' action when the 'Complete and Await Response' command runs automatically (true/false).
 const setDeferDate = false
