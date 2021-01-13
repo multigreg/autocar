@@ -12,10 +12,10 @@ const applyWaitTag = true
 const placeWaitTagFirst = false
 
 // Apply the tags of each completed action to its corresponding 'waiting for' action (true/false).
-const reapplyTags = true
+const reapplyTags = false
 // Only reapply the following tags and their descendants.
 // Enter [] to reapply all tags, or a list of tag IDs or names, example: ['People', 'Important', 'g8LToQ3AQpK'].
-const reappliedTagsFilter = ['People']
+const reappliedTagsFilter = []
 
 // List (array) of rules to create the name of each 'waiting for' action based on its corresponding completed action,
 // in decreasing order of priority. Each rule can be a prefix text or an array with 2 items:
