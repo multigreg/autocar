@@ -35,12 +35,12 @@ Select ‘Customize Toolbar’ in the ‘View’ menu and drag the ‘Complete a
 
 **Use the ‘Option’ key to open the options dialog.**
 To open a dialog with options for the new actions, hold down the ‘Option’ key when using the ‘Complete and Await Response’ command (due to a bug in OmniFocus for macOS at the time of writing, when using the menu it is necessary to hold down the ‘Option’ key _before_ clicking on ‘Automation’ in the menu bar).
-## Settings
-Settings, which control the behaviour of the plug-in and the default options for the new actions, can be changed in the `settings.js` file.
+## Preferences
+Preferences, which control the behaviour of the plug-in and the default options for the new actions, can be changed in the `Autocar preferences.txt` file.
 
 To modify the settings on macOS:
 - right-click (or Control-click) on the plug-in file (`autocar.omnifocusjs`) and select ‘Show Package Contents’.
-- In the `Resources` folder, open the file `settings.js` in a text editor.
+- In the `Resources` folder, open the file `Autocar preferences.txt` in a text editor.
 
 Each setting is explained in the file. More details and examples are on the wiki: [Settings](https://github.com/multigreg/autocar/wiki/Settings)
 ## Credits
