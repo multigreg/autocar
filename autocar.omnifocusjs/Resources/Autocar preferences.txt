@@ -1,0 +1,109 @@
+// **** Settings for the Autocar plug-in ****
+
+/* eslint-disable no-undef */
+
+// Choose the 'waiting' tag to apply to the new actions.
+// Enter its OmniFocus ID (get it using 'Copy as Link').
+waitTagID = ""
+// Alternatively, look up the tag from its name (the nearest match will be used if there is no exact match).
+waitTagName = "waiting"
+
+// Apply the specified 'waiting' tag to the new actions (true/false).
+applyWaitTag = true
+// Place the 'waiting' tag before any other tags.
+placeWaitTagFirst = false
+
+// Apply the tags of each completed action to its corresponding 'waiting for' action (true/false).
+reapplyTags = true
+// Only reapply the following tags and their descendants.
+// Enter [] to reapply all tags, or a list of tag IDs or names, example: ["People", "Important", "g8LToQ3AQpK"].
+reappliedTagsFilter = ["people", "People", "businesses", "Businesses"]
+
+// In the note of the 'waiting for' action, add a link to the completed action
+// and a timestamp (true, false, or a custom string).
+// For details on the custom string format, see the Autocar wiki. Examples:
+// noteLink = '${timestamp("Full", "Short")} — completed: ${link}'
+// noteLink = '${timestamp("E d MMM, HH:mm")} — completed: ${link}'
+noteLink = true
+// transfer the note of the completed action to the 'waiting for' action (as plain text)
+transferNote = true
+
+// Set a defer date for the 'waiting for' action when the 'Complete and Await Response' command runs automatically (true/false).
+setDeferDate = false
+// Preselect a default defer date in the Options dialog (true/false).
+setDeferDateInDialog = false
+// Number of days from now for the defer date.
+deferDaysLater = 3
+
+// Set a due date for the 'waiting for' action when the 'Complete and Await Response' command runs automatically (true/false).
+setDueDate = false
+// Preselect a default due date in the Options dialog (true/false).
+setDueDateInDialog = false
+// Number of days from now for the due date.
+dueDaysLater = 7
+
+// Show the Options dialog when running on macOS (true/false).
+macShowDialog = false
+// Show the Options dialog when running on iOS (true/false). Modifier keys are not supported
+// in OmniFocus for iOS, so setting this to 'true' is the only way to display Options.
+iOSShowDialog = false
+
+/* Define rules to create the name of each 'waiting for' action based on its corresponding completed action,
+in decreasing order of priority. Each rule can be:
+  - a prefix text;
+  - a built-in rule with parameters (see the Autocar wiki for all built-in rules);
+  - a regular expression literal for pattern matching and a string for the replacement text;
+  - a custom function, which takes the completed action as argument and returns the action name or null,
+    and optionally a label for the Options dialog. */
+
+// For pattern: 'abc #call #Mike', returns 'Waiting for reply from Mike: abc'
+rule.usingTags(
+    ["call", "Call"],
+    ["people", "People"],
+    "Waiting for reply: ${what}",
+    "Waiting for reply from ${who}: ${what}",
+    true
+)
+
+rule.usingTags(
+    ["submit", "Submit"],
+    ["people", "People"],
+    "Waiting for approval: ${what}",
+    "Waiting for approval by ${who}: ${what}",
+    true
+)
+
+rule.usingTags(
+    ["order", "Order"],
+    ["businesses", "Businesses"],
+    "Waiting for delivery: ${what}",
+    "Waiting for delivery from ${who}: ${what}",
+    true
+)
+
+// For pattern: 'Call Sophia about abc' or 'Call to Sophia: abc', returns 'Waiting for reply from Sophia: abc'
+rule.whoWhat(
+    "(call|ask|email|message)( to)?",
+    "about|regarding|re|for",
+    "Waiting for reply from $<who>: $<what>"
+)
+
+// For pattern: 'Email abc', returns 'Waiting for reply: abc'
+rule.keyword("call|ask|email|message", "Waiting for reply: $<what>")
+
+// For pattern: 'Submit abc to Mike' or 'Submit abc: Mike', returns 'Waiting for approval from Mike: abc'
+rule.whatWho("submit", "to", "Waiting for approval by $<who>: $<what>")
+
+rule.keyword("submit", "Waiting for approval: $<what>")
+
+rule.whatWho("order", "from|on", "Waiting for delivery from $<who>: $<what>")
+
+rule.keyword("order", "Waiting for delivery: $<what>")
+
+// RegExp rule for completing 'Waiting for: …' actions, returns the same name
+rule.customRegex(/(Waiting for.*?:( .+)?)/i, "$1")
+
+// simple prefix, applied if no other rule matches
+rule.prefix("Waiting for response: ")
+
+// **** End ****
