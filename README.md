@@ -42,7 +42,7 @@ To modify the settings on macOS:
 - right-click (or Control-click) on the plug-in file (`autocar.omnifocusjs`) and select ‘Show Package Contents’.
 - In the `Resources` folder, open the file `Autocar preferences.txt` in a text editor.
 
-Each setting is explained in the file. More details and examples are on the wiki: [Settings](https://github.com/multigreg/autocar/wiki/Settings)
+Each preference is explained in the file. More details and examples are on the wiki: [Preferences](https://github.com/multigreg/autocar/wiki/Preferences)
 ## Credits
 Prior implementations of the ‘complete and await a reply’ automation:
 - The popular [Complete and Await Reply](http://curtclifton.net/complete) in AppleScript by Curt Clifton.
