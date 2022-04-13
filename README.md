@@ -14,10 +14,10 @@ This plug-in requires OmniFocus for macOS version 3.11.1 or later, or OmniFocus 
 Download the plug-in file (`autocar.omnifocusjs.zip`) of the latest release and unzip the file. [Go to releases](https://github.com/multigreg/autocar/releases)
 
 (Alternatively, download the repository files using the green ‘Code’ button, unzip, and rename the ‘autocar’ folder with the extension `.omnifocusjs`.)
-### 2. (Optional) Specify a ‘waiting’ tag in the settings.
+### 2. (Optional) Specify a ‘waiting’ tag in the preferences.
 By default, the plug-in looks for a tag called ‘waiting’ (or a close match) and adds it to the new actions. This tag will be created if it isn’t found.
 
-To specify a different tag, edit the plug-in’s settings file: see [Settings](README.md#settings). At the top of the file, specify either the ID of the tag (`waitTagID` setting)  or the name of the tag (`waitTagName` setting).
+To specify a different tag, edit the plug-in’s settings file: see [Preferences](README.md#Preferences). At the top of the file, specify either the ID of the tag (`waitTagID` preference)  or the name of the tag (`waitTagName` preference).
 
 ### 3. Add the plug-in to OmniFocus.
 - On macOS, double-click on the plug-in file.
