@@ -50,4 +50,4 @@ Prior implementations of the ‘complete and await a reply’ automation:
 - [Complete and Await Reply](https://omni-automation.com/omnifocus/plug-in-complete-await.html) with Omni Automation, by Rosemary Orchard.
 
 
-Thanks to [Rob Trew](https://github.com/robtrew) for his valuable tips.
+Thanks to Thomas Kern for his valuable feedback and to [Rob Trew](https://github.com/robtrew) for his tips.
