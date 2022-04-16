@@ -3,7 +3,7 @@ A ‘Complete and Await Response’ plug-in for OmniFocus, with automatic naming
 ## About
 The ‘Complete and Await Response’ command marks the currently selected actions as complete and creates corresponding actions to represent responses you are waiting for (for example, a reply to an email, or a delivery following an order).
 
-Features include applying a filtered set of the tags of the completed actions to the new actions, and rules for automatically naming the new actions.
+Features include rules for automatically naming the new actions based on keywords or tags in the completed actions, and applying a filtered set of the tags of the completed actions to the new actions.
 
 The ‘Complete and Await Response’ command can be run directly with default options, or with the ‘Option’ key pressed to display an Options dialog for the new actions.
 
