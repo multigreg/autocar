@@ -11,7 +11,7 @@ The ‘Complete and Await Response’ command can be run directly with default o
 ## Installation
 This plug-in requires OmniFocus for macOS version 3.11.1 or later, or OmniFocus for iOS version 3.11.2 or later.
 ### 1. Download the plug-in.
-Download the plug-in file (`autocar.omnifocusjs.zip`) of the [latest release](https://github.com/multigreg/autocar/releases/tag/v1.0.0) and unzip the file.
+Download the plug-in file (`autocar.omnifocusjs.zip`) of the [latest release](https://github.com/multigreg/autocar/releases/latest) and unzip the file.
 ### 2. (Optional) Specify a ‘waiting’ tag in the preferences.
 By default, the plug-in looks for a tag called ‘waiting’ (or a close match) and adds it to the new actions. This tag will be created if it isn’t found.
 
