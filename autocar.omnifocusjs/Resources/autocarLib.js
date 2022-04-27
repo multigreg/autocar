@@ -213,7 +213,7 @@
                 }
                 function noteLink(task) {
                     try {
-                        // 'link' and 'timestamp()' can be referenced in 'options.noteLink' (by default or defined in settings.js)
+                        // 'link' and 'timestamp()' can be used in the 'noteLink' setting string
                         // eslint-disable-next-line no-unused-vars
                         const link = `${app.name.toLowerCase()}:///task/${
                             task.id.primaryKey
