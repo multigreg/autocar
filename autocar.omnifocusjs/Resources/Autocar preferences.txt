@@ -91,17 +91,18 @@ rule.whoWhat(
 // For pattern: 'Email abc', returns 'Waiting for reply: abc'
 rule.keyword("call|ask|email|message", "Waiting for reply: $<what>")
 
+// For pattern: 'Order abc from Amazon' or 'Order abc: Amazon', returns 'Waiting for delivery from Amazon: abc'
+rule.whatWho("order", "from|on", "Waiting for delivery from $<who>: $<what>")
+
+rule.keyword("order", "Waiting for delivery: $<what>")
+
 // For pattern: 'Submit abc to Mike' or 'Submit abc: Mike', returns 'Waiting for approval from Mike: abc'
 rule.whatWho("submit", "to", "Waiting for approval by $<who>: $<what>")
 
 rule.keyword("submit", "Waiting for approval: $<what>")
 
-rule.whatWho("order", "from|on", "Waiting for delivery from $<who>: $<what>")
-
-rule.keyword("order", "Waiting for delivery: $<what>")
-
 // RegExp rule for completing 'Waiting for: …' actions, returns the same name
-rule.customRegex(/(Waiting for.*?:( .+)?)/i, "$1")
+rule.customRegex(/(Waiting for.*:.*)/iu, "$1")
 
 // simple prefix, applied if no other rule matches
 rule.prefix("Waiting for response: ")
