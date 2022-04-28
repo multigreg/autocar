@@ -1,4 +1,4 @@
 "label" = "Complete and Await Response";
-"shortLable" = "Complete and Await Response";
-"mediumLable" = "Complete and Await Response";
+"shortLabel" = "Complete and Await Response";
+"mediumLabel" = "Complete and Await Response";
 "longLabel" = "Complete the selected actions and create new actions for awaited responses";

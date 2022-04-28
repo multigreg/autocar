@@ -2,8 +2,10 @@
 
 ;(() => {
     "use strict"
-    const ruleLib = new PlugIn.Library(this.version)
+    const punctuation = "-*[:>—]+|-{2,}"
+    const whoPrefix = "@"
 
+    const ruleLib = new PlugIn.Library(this.version)
     const rulesArray = []
 
     // methods of this object are available in evaluation of code in the settings file — "built-in rule types"
@@ -15,52 +17,48 @@
         return rule
     }
 
-    // Matches patterns like: 'Send' <what>
+    // Matches patterns like: "Send <what>"
     ruleLib.user.keyword = function (
         keyword,
         waitingActionName = "Waiting for response: $<what>"
     ) {
-        // rule like /.*?(?:call|email)[\s\p{P}]*\s(?<what>.+)/iu
         if (keyword) {
-            const regex = `.*?(?:${keyword})[\\s\\p{P}]*\\s(?<what>.+)`
+            const regex = `(?:^|.*\\s)(?:${keyword})\\s*(?:\\s|(?:${punctuation})+)\\s*(?<what>.+)`
             const rule = makeRegexRule(regex, waitingActionName)
             rulesArray.push(rule)
             return rule
         }
     }
 
-    // Matches patterns like: 'Call' <who> 'about' <what>
+    // Matches patterns like: "Call <who> about <what>"
     ruleLib.user.whoWhat = function (
         keyword,
         proposition,
         waitingActionName = "Waiting for response from $<who>: $<what>"
     ) {
-        // rule like /.*?(?:call|email)\s+(?<who>.+)(?:[\s\p{P}]+(?:regarding|about)[\s\p{P}]+|—|[\s\p{P}]{2})(?<what>.+)/iu
         if (keyword && proposition) {
-            const regex = `.*?(?:${keyword})\\s+(?<who>.+)(?:[\\s\\p{P}]+(?:${proposition})[\\s\\p{P}]+|—|[\\s\\p{P}]{2})(?<what>.+)`
+            const regex = `(?:^|.*\\s)(?:${keyword})\\s*(?:\\s|(?:${punctuation})+|(?:${whoPrefix}))\\s*(?<who>.+?)\\s*(?:\\s(?:${proposition})[:\\s]|(?:${punctuation}))+\\s*(?<what>.+)`
             const rule = makeRegexRule(regex, waitingActionName)
             rulesArray.push(rule)
             return rule
         }
     }
 
-    // Matches patterns like: 'Submit' <what> 'to' <who>
+    // Matches patterns like: "Submit <what> to <who>"
     ruleLib.user.whatWho = function (
         keyword,
         proposition,
         waitingActionName = "Waiting for response from $<who>: $<what>"
     ) {
-        // rule like /.*?(?:submit)\s+(?<what>.+)(?:[\s\p{P}]+(?:to)[\s\p{P}]+|—|[\s\p{P}]{2})(?<who>.+)/iu
-        // same regex as in requestWhoWhat() but with named capture groups inverted
         if (keyword && proposition) {
-            const regex = `.*?(?:${keyword})\\s+(?<what>.+)(?:[\\s\\p{P}]+(?:${proposition})[\\s\\p{P}]+|—|[\\s\\p{P}]{2})(?<who>.+)`
+            const regex = `(?:^|.*\\s)(?:${keyword})\\s*(?:\\s|(?:${punctuation})+)\\s*(?<what>.+?)\\s*(?:\\s(?:${proposition})[:\\s]|(?:${punctuation})|(?:${whoPrefix}))+\\s*(?<who>.+)`
             const rule = makeRegexRule(regex, waitingActionName)
             rulesArray.push(rule)
             return rule
         }
     }
 
-    // Matches patterns of task name and tags like: Problem abc #call #person
+    // Matches patterns of task name and tags like: "Problem abc" [call] [person]
     ruleLib.user.usingTags = function (
         keywordTagName,
         whoTagName,
