@@ -83,13 +83,16 @@ rule.usingTags(
 
 // For pattern: 'Call Sophia about abc' or 'Call to Sophia: abc', returns 'Waiting for reply from Sophia: abc'
 rule.whoWhat(
-    "(call|ask|email|message)( to)?",
+    "(phone call|call|phone|ask|email|message)( to)?",
     "about|regarding|re|for",
     "Waiting for reply from $<who>: $<what>"
 )
 
 // For pattern: 'Email abc', returns 'Waiting for reply: abc'
-rule.keyword("call|ask|email|message", "Waiting for reply: $<what>")
+rule.keyword(
+    "(phone call|call|phone|ask|email|message)( to)?",
+    "Waiting for reply: $<what>"
+)
 
 // For pattern: 'Order abc from Amazon' or 'Order abc: Amazon', returns 'Waiting for delivery from Amazon: abc'
 rule.whatWho("order", "from|on", "Waiting for delivery from $<who>: $<what>")
