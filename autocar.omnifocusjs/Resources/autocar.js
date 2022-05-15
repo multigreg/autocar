@@ -1,100 +1,29 @@
 /* global PlugIn, Task */
-
+"use strict"
 ;(() => {
-    // don't use strict code, to avoid explicit variable declaration in settings file
     const action = new PlugIn.Action(async function (selection) {
         const plugin = this.plugIn
         const mainLib = plugin.library("autocarLib")
         const ruleLib = plugin.library("ruleLib")
-        // variable name to use when calling task name rule methods in user-defined settings file
-        // eslint-disable-next-line no-unused-vars
-        const rule = ruleLib.user
+        const settingsLib = plugin.library("settingsLib")
 
         try {
             if (!mainLib.appVersionCheck()) {
                 throw 100
             }
 
+            ruleLib.clearRules()
+
             let oSettings
             try {
-                async function loadSettings() {
-                    const packagedSettingsFileURL = plugin.resourceNamed(
-                        mainLib.packagedSettingsFileName
-                    )
-                    const standaloneSettingsFileURL = packagedSettingsFileURL
-                        .deletingLastPathComponent()
-                        .deletingLastPathComponent()
-                        .deletingLastPathComponent()
-                        .appendingPathComponent(
-                            mainLib.standaloneSettingsFileName
-                        )
-
-                    let settingsFileData
-                    try {
-                        settingsFileData = await mainLib.fetchFile(
-                            standaloneSettingsFileURL
-                        )
-                    } catch (e) {
-                        settingsFileData = await mainLib.fetchFile(
-                            packagedSettingsFileURL
-                        )
-                    }
-
-                    ruleLib.clearRules()
-
-                    let oSettings
-                    try {
-                        const strJs =
-                            settingsFileData.toString() +
-                            "\n;(" +
-                            objFromSettingsInput.toString() +
-                            ")()"
-                        oSettings = eval(strJs)
-                    } catch (e) {
-                        throw 110
-                    }
-
-                    if (!oSettings.taskNameRules) {
-                        oSettings.taskNameRules = ruleLib.getRules()
-                    }
-
-                    return oSettings
-
-                    function objFromSettingsInput() {
-                        const s = [
-                            "waitTagID",
-                            "waitTagName",
-                            "applyWaitTag",
-                            "placeWaitTagFirst",
-                            "reapplyTags",
-                            "reappliedTagsFilter",
-                            "noteLink",
-                            "noteInterline",
-                            "transferNote",
-                            "waitTaskPosition",
-                            "setDeferDate",
-                            "setDeferDateInDialog",
-                            "deferDaysLater",
-                            "setDueDate",
-                            "setDueDateInDialog",
-                            "dueDaysLater",
-                            "macShowDialog",
-                            "iOSShowDialog",
-                            "modifierKey",
-                            "taskNameRules",
-                        ]
-                        const o = {}
-                        s.forEach((i) => {
-                            try {
-                                o[i] = eval(i)
-                                // eslint-disable-next-line no-empty
-                            } catch {}
-                        })
-                        return o
-                    }
+                oSettings = await settingsLib.loadSettings(
+                    mainLib.defaults(),
+                    "rule",
+                    ruleLib.user
+                )
+                if (!oSettings.taskNameRules) {
+                    oSettings.taskNameRules = ruleLib.getRules()
                 }
-
-                oSettings = await loadSettings()
             } catch (e) {
                 if (e == 110) throw e
                 throw 120

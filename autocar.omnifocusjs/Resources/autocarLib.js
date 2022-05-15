@@ -1,4 +1,4 @@
-/* global PlugIn, flattenedTags, settings, app, Device, inbox, Formatter, Task, Form, Calendar, Tag, Version, tagsMatching, Alert, FileWrapper, FileSaver, TypeIdentifier */
+/* global PlugIn, flattenedTags, settings, app, Device, inbox, Formatter, Task, Form, Calendar, Tag, Version, tagsMatching, Alert */
 
 ;(() => {
     "use strict"
@@ -18,7 +18,10 @@
                 delete pluginSettingsInput.noteLink
             }
 
-            const pluginSettings = { ...defaults(), ...pluginSettingsInput }
+            const pluginSettings = {
+                ...piLib.defaults(),
+                ...pluginSettingsInput,
+            }
 
             function reappliedTagsFilter() {
                 if (anArray(pluginSettings.reappliedTagsFilter).length) {
@@ -120,31 +123,6 @@
                     t ? [t, Array.from(t.flattenedTags)].flat() : []
                 )
                 return [...new Set(arrayWithDescs)]
-            }
-
-            function defaults() {
-                return {
-                    waitTagID: "",
-                    waitTagName: "waiting",
-                    applyWaitTag: true,
-                    placeWaitTagFirst: false,
-                    reapplyTags: false,
-                    reappliedTagsFilter: [],
-                    taskNameRules: ["Waiting for response: "],
-                    noteLink: "${timestamp()} — completed: ${link}",
-                    noteInterline: "", // eg. '\n'
-                    transferNote: true,
-                    waitTaskPosition: "normal", // 'normal', 'outsideSequences', or 'projectEnd'
-                    setDeferDate: false,
-                    setDeferDateInDialog: true,
-                    deferDaysLater: 5,
-                    setDueDate: false,
-                    setDueDateInDialog: true,
-                    dueDaysLater: 7,
-                    macShowDialog: false,
-                    iOSShowDialog: false,
-                    modifierKey: "option",
-                }
             }
         }
 
@@ -597,67 +575,29 @@
         }
     }
 
-    piLib.packagedSettingsFileName = "Autocar preferences.txt"
-    piLib.standaloneSettingsFileName = piLib.packagedSettingsFileName
-
-    piLib.settingsFileSaveAs = async () => {
-        const uiInfoTitle = "Save the Autocar preferences file"
-        const uiInfoMessage =
-            "In the next dialog, please navigate to the following folder:"
-        const uiSaveAsMessage = "Save a copy of the Autocar preferences file"
-
-        const packagedSettingsFileURL = piLib.plugIn.resourceNamed(
-            piLib.packagedSettingsFileName
-        )
-        const requiredDestinationFolder =
-            piLib.plugIn.URL.deletingLastPathComponent()
-        const requiredDestination =
-            requiredDestinationFolder.appendingPathComponent(
-                piLib.standaloneSettingsFileName
-            )
-        const requiredDestinationFolderDisplay = decodeURI(
-            requiredDestinationFolder.string
-        ).replace(/^file:\/\//, "")
-
-        const alert = new Alert(
-            uiInfoTitle,
-            uiInfoMessage + "\n\n" + requiredDestinationFolderDisplay
-        )
-        await alert.show()
-
-        const settingsFileData = await piLib.fetchFile(packagedSettingsFileURL)
-        const fw = FileWrapper.withContents(
-            piLib.standaloneSettingsFileName,
-            settingsFileData
-        )
-
-        const fs = new FileSaver()
-        fs.message = uiSaveAsMessage
-        fs.types = [TypeIdentifier.plainText]
-        const fileURL = await fs.show(fw)
-
-        if (fileURL.string != requiredDestination.string) {
-            piLib.log(
-                "INFO",
-                "The preferences file was not saved in the folder that contains the Autocar plug-in: \n" +
-                    requiredDestinationFolderDisplay +
-                    "\n" +
-                    "It will not be used when the plug-in runs."
-            )
+    piLib.defaults = function () {
+        return {
+            waitTagID: "",
+            waitTagName: "waiting",
+            applyWaitTag: true,
+            placeWaitTagFirst: false,
+            reapplyTags: false,
+            reappliedTagsFilter: [],
+            noteLink: "${timestamp()} — completed: ${link}",
+            noteInterline: "", // eg. '\n'
+            transferNote: true,
+            waitTaskPosition: "normal", // 'normal', 'outsideSequences', or 'projectEnd'
+            setDeferDate: false,
+            setDeferDateInDialog: true,
+            deferDaysLater: 5,
+            setDueDate: false,
+            setDueDateInDialog: true,
+            dueDaysLater: 7,
+            macShowDialog: false,
+            iOSShowDialog: false,
+            modifierKey: "option",
+            taskNameRules: ["Waiting for response: "],
         }
-    }
-
-    piLib.fetchFile = (url) => {
-        return new Promise((resolve, reject) => {
-            try {
-                url.fetch(
-                    (data) => resolve(data),
-                    (err) => reject(err)
-                )
-            } catch (e) {
-                reject(e)
-            }
-        })
     }
 
     piLib.minAppVersions = {
