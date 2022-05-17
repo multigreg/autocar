@@ -103,6 +103,10 @@
                       )
                     : null,
                 waitTaskPosition: String(pluginSettings.waitTaskPosition),
+                iPadShowDialog:
+                    pluginSettings.iPadShowDialog === undefined
+                        ? pluginSettings.iOSShowDialog
+                        : pluginSettings.iPadShowDialog,
             }
 
             const options = { ...pluginSettings, ...processedPluginSettings }
@@ -133,6 +137,8 @@
                 return ((d) => (isKeyDown ? !d : d))(
                     Device.current.mac
                         ? options.macShowDialog
+                        : Device.current.iPad
+                        ? options.iPadShowDialog
                         : options.iOSShowDialog
                 )
             })()
@@ -594,6 +600,7 @@
             setDueDateInDialog: true,
             dueDaysLater: 7,
             macShowDialog: false,
+            iPadShowDialog: undefined, // new option in v1.3; make compatibile with older settings files having iOSShowDialog=true for all iOS/iPadOS devices
             iOSShowDialog: false,
             modifierKey: "option",
             taskNameRules: ["Waiting for response: "],

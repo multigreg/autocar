@@ -44,8 +44,9 @@ dueDaysLater = 7
 
 // Show the Options dialog when running on macOS (true/false).
 macShowDialog = false
-// Show the Options dialog when running on iOS (true/false). Modifier keys are not supported
-// in OmniFocus for iOS, so setting this to 'true' is the only way to display Options.
+// Show the Options dialog when running on iPadOS (true/false).
+iPadShowDialog = false
+// Show the Options dialog when running on iOS (true/false).
 iOSShowDialog = false
 
 /* Define rules to create the name of each 'waiting for' action based on its corresponding completed action,
