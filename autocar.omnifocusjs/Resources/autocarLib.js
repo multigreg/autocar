@@ -619,16 +619,23 @@
         } else if (Device.current.iOS) {
             platform = "ios"
         }
-        const minVersion = piLib.minAppVersions[platform].build
 
-        let currentVersion
-        try {
-            currentVersion = app.buildVersion
-        } catch {
-            // deprecated property available in OmniFocus builds prior to 149.7.0
-            currentVersion = new Version(app.version)
+        // only perform app version check on platforms where needed APIs were introduced;
+        // assume API backward compatibility on new platforms
+        if(platform) {
+            const minVersion = piLib.minAppVersions[platform].build
+
+            let currentVersion
+            try {
+                currentVersion = app.buildVersion
+            } catch {
+                // deprecated property available in OmniFocus builds prior to 149.7.0
+                currentVersion = new Version(app.version)
+            }
+            return currentVersion.atLeast(new Version(minVersion))
+        } else {
+            return true
         }
-        return currentVersion.atLeast(new Version(minVersion))
     }
 
     piLib.log = function (level, message, error) {
