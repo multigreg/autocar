@@ -622,7 +622,7 @@
 
         // only perform app version check on platforms where needed APIs were introduced;
         // assume API backward compatibility on new platforms
-        if(platform) {
+        if (platform) {
             const minVersion = piLib.minAppVersions[platform].build
 
             let currentVersion
