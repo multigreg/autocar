@@ -233,6 +233,9 @@
                         const name = runRules(t, options.taskNameRules)
 
                         const w = new Task(name, position(t))
+                        // case where task to complete is in Inbox and has a project attribute, before Inbox cleanup
+                        if (!t.containingProject && t.assignedContainer)
+                            w.assignedContainer = t.assignedContainer
                         waitTasks.push(w)
 
                         function doAddWaitTag() {
