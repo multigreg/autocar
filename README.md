@@ -32,7 +32,7 @@ Select ‘Customize Toolbar’ in the ‘View’ menu and drag the ‘Complete a
    - On iOS, from the share sheet. Long-press on an action and choose ‘Share’ from the context menu, or select several actions in ‘Edit’ mode and tap on the share icon.
 
 **Use the ‘Option’ key to open the options dialog.**
-To open a dialog with options for the new actions, hold down the ‘Option’ key when using the ‘Complete and Await Response’ command (due to a bug in OmniFocus for macOS at the time of writing, when using the menu it is necessary to hold down the ‘Option’ key _before_ clicking on ‘Automation’ in the menu bar).
+To open a dialog with options for the new actions, hold down the ‘Option’ key when using the ‘Complete and Await Response’ command (if this doesn’t work, try waiting a brief moment before releasing the Option key; it seems there is a noticeable delay before OmniFocus detects that the key is pressed).
 ## Settings
 Settings, which control the behaviour of the plug-in and the default options for the new actions, can be changed in the `Autocar settings.txt` file.
 
